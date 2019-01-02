@@ -5,9 +5,11 @@
 # -------
 #
 - repo: easymotion/vim-easymotion
-- repo: tpope/vim-fugitive
-- repo: autozimu/LanguageClient-neovim
+- repo: Shougo/vimproc.vim
+  build: 'make'
+#- repo: autozimu/LanguageClient-neovim
 - repo: ervandew/supertab # Use tab to autocomplete
+- repo: khorser/vim-repl # All purpose repl?
 - repo: ludovicchabant/vim-gutentags
 - repo: majutsushi/tagbar
 - repo: amiorin/vim-project
@@ -52,7 +54,7 @@
   hook_source: |
     let g:gitgutter_map_keys = 0
     let g:gitgutter_sh = $SHELL
-- repo: neoclide/vim-easygit
+
 - repo: scrooloose/nerdtree
 - repo: bronson/vim-visual-star-search
 - repo: itchyny/calendar.vim
@@ -74,7 +76,9 @@
 # Interface {{{
 # ---------
 - repo: scrooloose/nerdcommenter
+- repo: jreybert/vimagit
 - repo: joshdick/onedark.vim
+- repo: tpope/vim-fugitive
 - repo: mhinz/vim-startify
   hook_add: |
     let g:startify_custom_header          = [

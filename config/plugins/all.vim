@@ -122,6 +122,18 @@ if dein#tap('nvim-r')
 	let R_assign = 2
 endif
 " }}} nvim-r
+"  tagbar {{{
+if dein#tap('tagbar')
+	let g:tagbar_left = 1
+endif
+
+" tagbar }}}
+"  SuperTab {{{
+if dein#tap('supertab')
+	let g:SuperTabMappingForward = '<s-tab>' " (default value: '<tab>')
+	let g:SuperTabMappingBackward = '<tab>' " (default value: '<s-tab>')
+endif
+" SuperTab }}}
 " {{{ vim-airline
 if dein#tap('vim-airline')
 	let g:airline#extensions#tabline#enabled = 1
@@ -236,7 +248,7 @@ if dein#tap('vim-which-key')
 				\ }
 	let g:which_key_map.e = {
 				\ 'name' : '+easyjump' ,
-				\ 'e' : ['<Plug>(easymotion-overwin-f)'        , 'easymotion']        ,
+				\ 'e' : ['<Plug>(easymotion-overwin-f2)'        , 'easymotion']        ,
 				\ }
 	let g:which_key_map.f = {
 				\ 'name' : '+files' ,

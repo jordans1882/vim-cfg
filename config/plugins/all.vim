@@ -284,6 +284,10 @@ if dein#tap('vim-which-key')
 			\ 'p' : ['tabprevious'     , 'Previous Tab']       ,
 			\ 'd' : ['tabclose'     , 'Close Tab']       ,
 			\ }
+	let g:which_key_map.T = {
+			\ 'name' : '+tags'                                            ,
+			\ 'T' : ['TagbarToggle'     , 'Toggle Tagbar']       ,
+			\ }
 	let g:which_key_map['w'] = {
 			\ 'name' : '+windows' ,
 			\ 'w' : ['<C-W>w'     , 'other-window']          ,
@@ -318,8 +322,9 @@ nnoremap <silent> <localleader> :WhichKey ';'<CR>
 "	vnoremap <silent> <localleader> :WhichKey ';'<CR>
 endif
 " }}} deoplete
-
-
+" vim-cmake {{{
+let g:cmake_cxx_compiler='g++'
+" vim-cmake }}}
 
 " {{{ Old settings
 " if dein#tap('vim-denite-z')

@@ -195,20 +195,20 @@ endif
 " 	\   let b:foldmethod_save = &l:foldmethod |
 " 	\   let &l:foldmethod = 'manual' |
 " 	\ endif
-" 
+"
 " autocmd MyAutoCmd BufWritePost *
 " 	\ if &l:foldmethod ==# 'manual' && exists('b:foldmethod_save') |
 " 	\   let &l:foldmethod = b:foldmethod_save |
 " 	\   execute 'normal! zx' |
 " 	\ endif
-" 
+"
 " if has('folding')
 " 	set foldenable
 " 	set foldmethod=syntax
 " 	set foldlevelstart=99
 " 	set foldtext=FoldText()
 " endif
-" 
+"
 " " Improved Vim fold-text
 " " See: http://www.gregsexton.org/2011/03/improving-the-text-displayed-in-a-fold/
 " function! FoldText()
@@ -221,7 +221,7 @@ endif
 " 	else
 " 		let line = substitute(getline(fs), '\t', repeat(' ', &tabstop), 'g')
 " 	endif
-" 
+"
 " 	let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
 " 	let foldSize = 1 + v:foldend - v:foldstart
 " 	let foldSizeStr = ' ' . foldSize . ' lines '
@@ -231,7 +231,21 @@ endif
 " 	let expansionString = repeat('.', w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
 " 	return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
 " endfunction
-" 
+"
 " " }}}
+
+let t:is_transparent = 0
+function! Toggle_transparent()
+    if t:is_transparent == 0
+        hi Normal guibg=NONE ctermbg=NONE
+        let t:is_transparent = 1
+    else
+        set background=dark
+        let t:is_tranparent = 0
+    endif
+endfunction
+nnoremap <C-t> : call Toggle_transparent()<CR>
+
+hi Normal guibg=NONE ctermbg=NONE
 
 " vim: set foldmethod=marker ts=2 sw=2 tw=80 noet :

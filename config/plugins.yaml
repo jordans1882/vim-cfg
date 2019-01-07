@@ -4,6 +4,7 @@
 # Startup {{{
 # -------
 #
+- repo: vhdirk/vim-cmake
 - repo: easymotion/vim-easymotion
 - repo: Shougo/vimproc.vim
   build: 'make'

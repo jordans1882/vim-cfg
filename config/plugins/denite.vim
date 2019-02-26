@@ -120,4 +120,5 @@ let s:menus.my_commands.command_candidates = [
 
 call denite#custom#var('menu', 'menus', s:menus)
 
-" vim: set ts=2 sw=2 tw=80 noet :
+"
+

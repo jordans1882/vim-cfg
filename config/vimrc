@@ -1,72 +1,81 @@
-" Runtime and Plugins
-" -------------------------------------------------
+" {{{ Document Header
+" Filename: vimrc
+" Purpose: Runtime and Plugins
+" Description: This file has a control for whether or not to use plugins using the variable g:DefaultVim
+" }}} Document Header
+" {{{ My Default Vim
 
-" TODO: comment this line
-if &compatible
-	set nocompatible
+" {{{ Setup default paths
+let $VIMPATH = fnamemodify(resolve(expand('<sfile>:p')), ':h:h') " TODO: understand this line...  I think it's the main vim path
+let $VARPATH = expand(($XDG_CACHE_HOME ? $XDG_CACHE_HOME : '~/.cache').'/vim') " TODO: Find out what I cache here...
+" }}} Setup default paths
+" {{{ Utility Functions to source a file
+function! s:source_file(path, ...) abort
+	let use_global = get(a:000, 0, ! has('vim_starting'))
+	let abspath = resolve(expand($VIMPATH.'/config/'.a:path))
+	if ! use_global
+		execute 'source' fnameescape(abspath)
+		return
+	endif
+
+	let content = map(readfile(abspath),
+		\ "substitute(v:val, '^\\W*\\zsset\\ze\\W', 'setglobal', '')")
+	let tempfile = tempname()
+	try
+		call writefile(content, tempfile)
+		execute printf('source %s', fnameescape(tempfile))
+	finally
+		if filereadable(tempfile)
+			call delete(tempfile)
+		endif
+	endtry
+endfunction
+" }}} Utility Functions to source a file
+" {{{ Default sourcing
+call s:source_file('general.vim')
+call s:source_file('filetype.vim')
+call s:source_file('mappings.vim')
+call s:source_file('theme.vim')
+
+" }}} Default sourcing
+
+" Set augroup
+" TODO: Comment why we're setting this
+augroup MyAutoCmd
+	autocmd!
+	autocmd CursorHold *? syntax sync minlines=300
+augroup END
+
+ "Initialize base requirements
+" (i.e. load init.vim or terminal.vim depending...)
+if has('vim_starting')
+	call s:source_file('init.vim')
+	if ! has('nvim') && ! has('gui_running') && ! has('win32') && ! has('win64')
+		" Linux terminal settings
+		call s:source_file('terminal.vim')
+	endif
 endif
 
-" TODO: figure out what this did
-" let $NVIM_PYTHON_LOG_FILE = '/tmp/nvim_log'
-" let $NVIM_PYTHON_LOG_LEVEL = 'DEBUG'
-
-" Set main configuration directory, and where cache is stored.
-let $VIMPATH = fnamemodify(resolve(expand('<sfile>:p')), ':h:h') " TODO: understand this line
-let $VARPATH = expand(($XDG_CACHE_HOME ? $XDG_CACHE_HOME : '~/.cache').'/vim') " TODO: understand this line
-
-" " Search and use environments specifically made for Neovim.
-" " TODO: Figure out why these are set
-" if isdirectory($VARPATH.'/venv/neovim2')
-" 	let g:python_host_prog = $VARPATH.'/venv/neovim2/bin/python'
-" endif
-" if isdirectory($VARPATH.'/venv/neovim3')
-" 	let g:python3_host_prog = $VARPATH.'/venv/neovim3/bin/python'
-" endif
-"
-" " Dein Global Variables
-"
-"
-"
-
-
-if &compatible
-  set nocompatible
-endif
-" Add the dein installation directory into runtimepath
+" }}} Default Vim (Things that don't get overridden by plugins?)
+" {{{ Plugins (Using Dein)
+if !exists("g:DefaultVim")
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
+" {{{ Set Dein Variables
+" TODO: Look into these settings...
 let g:dein#install_max_processes = 16
 let g:dein#install_progress_type = 'echo'
 let g:dein#enable_notification = 0
 let g:dein#install_log_filename = $VARPATH.'/dein.log'
-
-" if dein#load_state('~/.cache/dein')
-"   call dein#begin('~/.cache/dein')
-"
-"   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-"   call dein#add('Shougo/deoplete.nvim')
-"   call dein#add('jordans1882/vim-slime')
-"   if !has('nvim')
-"     call dein#add('roxma/nvim-yarp')
-"     call dein#add('roxma/vim-hug-neovim-rpc')
-"   endif
-"
-"   call dein#end()
-"   call dein#save_state()
-" endif
-
-filetype plugin indent on
-syntax enable
-
-
-"
-" " Check if ruby exists
+" }}} Set Variables
+" {{{ Dein utility functions
+" {{{ Check if ruby exists
 function! s:dein_check_ruby() abort
 	call system("ruby -e 'require \"json\"; require \"yaml\"'")
 	return (v:shell_error == 0) ? 1 : 0
 endfunction
-"
-" " Check if yaml2json exists
+" }}} Check if ruby exists
+" {{{ Check if yaml2json exists
 function! s:dein_check_yaml2json()
 	try
 		let result = system('yaml2json', "---\ntest: 1")
@@ -79,8 +88,8 @@ function! s:dein_check_yaml2json()
 	endtry
 	return 0
 endfunction
-"
-" " Function to load plugins from yaml file
+" }}} Check if yaml2json exists
+" {{{ Function to load plugins from yaml file
 function! s:dein_load_yaml(filename) abort
 	if executable('yaml2json') && exists('*json_decode') &&
 				\ s:dein_check_yaml2json()
@@ -107,47 +116,9 @@ endpython
 	endfor
 	unlet g:denite_plugins
 endfunction
-"
-" " Function to source a file (only within this script?)
-" " TODO: look at logic in this function
-function! s:source_file(path, ...) abort
-	let use_global = get(a:000, 0, ! has('vim_starting'))
-	let abspath = resolve(expand($VIMPATH.'/config/'.a:path))
-	if ! use_global
-		execute 'source' fnameescape(abspath)
-		return
-	endif
-
-	let content = map(readfile(abspath),
-		\ "substitute(v:val, '^\\W*\\zsset\\ze\\W', 'setglobal', '')")
-	let tempfile = tempname()
-	try
-		call writefile(content, tempfile)
-		execute printf('source %s', fnameescape(tempfile))
-	finally
-		if filereadable(tempfile)
-			call delete(tempfile)
-		endif
-	endtry
-endfunction
-"
-" " Set augroup
-" " TODO: Comment why we're setting this
-augroup MyAutoCmd
-	autocmd!
-	autocmd CursorHold *? syntax sync minlines=300
-augroup END
-"
-" " Initialize base requirements
-" (i.e. load init.vim or terminal.vim depending...)
-if has('vim_starting')
-	call s:source_file('init.vim')
-	if ! has('nvim') && ! has('gui_running') && ! has('win32') && ! has('win64')
-		" Linux terminal settings
-		call s:source_file('terminal.vim')
-	endif
-endif
-"
+" }}} Function to load plugins from yaml file
+" }}} Dein utility functions
+" {{{ Initialize Dein
 " Initialize dein.vim (package manager)
 let s:path = expand('$VARPATH/dein')
 let s:plugins_path = expand('$VIMPATH/config/plugins.yaml')
@@ -178,36 +149,228 @@ if dein#load_state(s:path)
 		call dein#install()
 	endif
 endif
-
-" Source (all) plugin config
-" TODO: find out why put all in this file
+" }}} Initialize Dein
+" {{{ Source Plugin Configs
 call s:source_file('plugins/all.vim')
 call s:source_file('plugins/denite.vim')
-"
-" " TODO: comment this with reason
-filetype plugin indent on
-syntax enable
 
+" }}} Source Plugin Configs
+
+" }}} Plugins (Using Dein)
+" {{{ Post-plugin settings
+" TODO: Modularize these settings into separate files
+syntax on
+
+
+autocmd VimEnter *
+	\   if !argc()
+	\ |   Startify
+	\ |   NERDTree
+	\ |   wincmd w
+	\ | endif
+
+
+endif
+" }}} Post-plugin settings
+" {{{ Olde
+
+" " TODO: figure out first usecase... just for nvim?
+" let $NVIM_PYTHON_LOG_FILE = '/tmp/nvim_log'
+" let $NVIM_PYTHON_LOG_LEVEL = 'DEBUG'
 "
-" " TODO: find out why the if statement
-" " if ! has('vim_starting')
-" 	call dein#call_hook('source')
-" 	call dein#call_hook('post_source')
+" " Set main configuration directory, and where cache is stored.
+" let $VIMPATH = fnamemodify(resolve(expand('<sfile>:p')), ':h:h') " TODO: understand this line
+" let $VARPATH = expand(($XDG_CACHE_HOME ? $XDG_CACHE_HOME : '~/.cache').'/vim') " TODO: Find out what I cache here...
+
+" " Search and use environments specifically made for Neovim.... Don't use interactive python extensively... Environment could be machine dependent...
+" " TODO: Figure out why these are set
+" if isdirectory($VARPATH.'/venv/neovim2')
+" 	let g:python_host_prog = $VARPATH.'/venv/neovim2/bin/python'
+" endif
+" if isdirectory($VARPATH.'/venv/neovim3')
+" 	let g:python3_host_prog = $VARPATH.'/venv/neovim3/bin/python'
+" endif
+"
+" if &compatible
+"   set nocompatible
+" endif
+" " Add the dein installation directory into runtimepath
+" set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
+"
+" let g:dein#install_max_processes = 16
+" let g:dein#install_progress_type = 'echo'
+" let g:dein#enable_notification = 0
+" let g:dein#install_log_filename = $VARPATH.'/dein.log'
+"
+" " if dein#load_state('~/.cache/dein')
+" "   call dein#begin('~/.cache/dein')
+" "
+" "   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
+" "   call dein#add('Shougo/deoplete.nvim')
+" "   call dein#add('jordans1882/vim-slime')
+" "   if !has('nvim')
+" "     call dein#add('roxma/nvim-yarp')
+" "     call dein#add('roxma/vim-hug-neovim-rpc')
+" "   endif
+" "
+" "   call dein#end()
+" "   call dein#save_state()
 " " endif
 "
-" " Load configuration modules
-call s:source_file('general.vim')
-call s:source_file('filetype.vim')
-call s:source_file('mappings.vim')
-call s:source_file('theme.vim')
+" filetype plugin indent on
+" syntax enable
 "
-" " Load user custom local settings
-" if filereadable(expand('$VIMPATH/config/local.vim'))
-" 	call s:source_file('local.vim')
+"
+" "
+" " " Check if ruby exists
+" function! s:dein_check_ruby() abort
+" 	call system("ruby -e 'require \"json\"; require \"yaml\"'")
+" 	return (v:shell_error == 0) ? 1 : 0
+" endfunction
+" "
+" " " Check if yaml2json exists
+" function! s:dein_check_yaml2json()
+" 	try
+" 		let result = system('yaml2json', "---\ntest: 1")
+" 		if v:shell_error != 0
+" 			return 0
+" 		endif
+" 		let result = json_decode(result)
+" 		return result.test
+" 	catch
+" 	endtry
+" 	return 0
+" endfunction
+" "
+" " " Function to load plugins from yaml file
+" function! s:dein_load_yaml(filename) abort
+" 	if executable('yaml2json') && exists('*json_decode') &&
+" 				\ s:dein_check_yaml2json()
+" 		" Decode YAML using the CLI tool yaml2json
+" 		" See: https://github.com/koraa/large-yaml2json-json2yaml
+" 		let g:denite_plugins = json_decode(
+" 					\ system('yaml2json', readfile(a:filename)))
+" 	elseif executable('ruby') && exists('*json_decode') && s:dein_check_ruby()
+" 		let g:denite_plugins = json_decode(
+" 					\ system("ruby -e 'require \"json\"; require \"yaml\"; ".
+" 									\ "print JSON.generate YAML.load \$stdin.read'",
+" 									\ readfile(a:filename)))
+" 	else
+" 		" Fallback to use python3 and PyYAML
+" 	python3 << endpython
+" import vim, yaml
+" with open(vim.eval('a:filename'), 'r') as f:
+" 	vim.vars['denite_plugins'] = yaml.load(f.read())
+" endpython
+" 	endif
+"
+" 	for plugin in g:denite_plugins
+" 		call dein#add(plugin['repo'], extend(plugin, {}, 'keep'))
+" 	endfor
+" 	unlet g:denite_plugins
+" endfunction
+" "
+" " " Function to source a file (only within this script?)
+" " " TODO: look at logic in this function
+" function! s:source_file(path, ...) abort
+" 	let use_global = get(a:000, 0, ! has('vim_starting'))
+" 	let abspath = resolve(expand($VIMPATH.'/config/'.a:path))
+" 	if ! use_global
+" 		execute 'source' fnameescape(abspath)
+" 		return
+" 	endif
+"
+" 	let content = map(readfile(abspath),
+" 		\ "substitute(v:val, '^\\W*\\zsset\\ze\\W', 'setglobal', '')")
+" 	let tempfile = tempname()
+" 	try
+" 		call writefile(content, tempfile)
+" 		execute printf('source %s', fnameescape(tempfile))
+" 	finally
+" 		if filereadable(tempfile)
+" 			call delete(tempfile)
+" 		endif
+" 	endtry
+" endfunction
+" "
+" " " Set augroup
+" " " TODO: Comment why we're setting this
+" augroup MyAutoCmd
+" 	autocmd!
+" 	autocmd CursorHold *? syntax sync minlines=300
+" augroup END
+" "
+" " " Initialize base requirements
+" " (i.e. load init.vim or terminal.vim depending...)
+" if has('vim_starting')
+" 	call s:source_file('init.vim')
+" 	if ! has('nvim') && ! has('gui_running') && ! has('win32') && ! has('win64')
+" 		" Linux terminal settings
+" 		call s:source_file('terminal.vim')
+" 	endif
 " endif
-" set secure
+" "
+" " Initialize dein.vim (package manager)
+" let s:path = expand('$VARPATH/dein')
+" let s:plugins_path = expand('$VIMPATH/config/plugins.yaml')
+" let s:user_plugins_path = expand('$VIMPATH/config/local.plugins.yaml')
+" if dein#load_state(s:path)
+" 	call dein#begin(s:path, [expand('<sfile>'), s:plugins_path])
+" 	try
+" 		call s:dein_load_yaml(s:plugins_path)
+" 		if filereadable(s:user_plugins_path)
+" 			call s:dein_load_yaml(s:user_plugins_path)
+" 		endif
+" 	catch /.*/
+" 		echoerr v:exception
+" 		echomsg 'Error loading config/plugins.yaml...'
+" 		echomsg 'Caught: ' v:exception
+" 		echoerr 'Please run: pip3 install --user PyYAML'
+" 	endtry
 "
+" 	if isdirectory(expand('$VIMPATH/dev'))
+" 		call dein#local(expand('$VIMPATH/dev'), {'frozen': 1, 'merged': 0})
+" 	endif
+" 	call dein#end()
+" 	call dein#save_state()
+" 	if dein#check_install()
+" 		if ! has('nvim')
+" 			set nomore
+" 		endif
+" 		call dein#install()
+" 	endif
+" endif
 "
+" " Source (all) plugin config
+" " TODO: find out why put all in this file
+" call s:source_file('plugins/all.vim')
+" call s:source_file('plugins/denite.vim')
+" "
+" " " TODO: comment this with reason
+" filetype plugin indent on
+" syntax enable
+"
+" "
+" " " TODO: find out why the if statement
+" " " if ! has('vim_starting')
+" " 	call dein#call_hook('source')
+" " 	call dein#call_hook('post_source')
+" " " endif
+" "
+" " " Load configuration modules
+" call s:source_file('general.vim')
+" call s:source_file('filetype.vim')
+" call s:source_file('mappings.vim')
+" call s:source_file('theme.vim')
+" "
+" " " Load user custom local settings
+" " if filereadable(expand('$VIMPATH/config/local.vim'))
+" " 	call s:source_file('local.vim')
+" " endif
+" " set secure
+" "
+" "
 
+" }}} Olde
 
-" vim: set ts=2 sw=2 tw=80 noet foldmethod=marker :
+" vim: set foldmethod=marker ts=2 :

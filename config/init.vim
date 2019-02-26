@@ -1,4 +1,3 @@
-
 " Vim Initialization
 " ------------------
 
@@ -83,11 +82,6 @@ let g:loaded_zip = 1
 let g:loaded_zipPlugin = 1
 " }}}
 
-autocmd VimEnter *
-	\   if !argc()
-	\ |   Startify
-	\ |   NERDTree
-	\ |   wincmd w
-	\ | endif
+autocmd BufWritePre * :DeleteTrailingWhitespace
 
 " vim: set foldmethod=marker ts=2 sw=2 tw=80 noet :

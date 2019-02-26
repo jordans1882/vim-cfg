@@ -2,6 +2,7 @@
 " Plugin Settings
 "---------------------------------------------------------
 
+
 " {{{ ale
 if dein#tap('ale')
 	let g:ale_linters = {
@@ -33,14 +34,9 @@ if dein#tap('calendar')
 	let g:calendar_google_task = 1
 endif
 " }}} Calendar
-" {{{ deoplete
-if dein#tap('deoplete.nvim')
-	let g:deoplete#enable_at_startup = 1
-endif
-" }}} deoplete
 " {{{ Denite Options
 if dein#tap('denite.nvim')
-	nnoremap <silent><LocalLeader>r :<C-u>Denite -resume -refresh<CR>
+	"nnoremap <silent><LocalLeader>r :<C-u>Denite -resume -refresh<CR>
 	nnoremap <silent><LocalLeader>f :<C-u>Denite file/rec<CR>
 	nnoremap <silent><LocalLeader>b :<C-u>Denite buffer file/old -default-action=switch<CR>
 	nnoremap <silent><LocalLeader>d :<C-u>Denite directory_rec -default-action=cd<CR>
@@ -86,13 +82,33 @@ if dein#tap('denite.nvim')
 	endfunction
 endif
 " }}} Denite Options
+" {{{ deoplete
+if dein#tap('deoplete.nvim')
+	let g:deoplete#enable_at_startup = 1
+endif
+" }}} deoplete
 " {{{ neosnippet
-if dein#tap('neosnippet.vim')
-	imap <expr><C-o> neosnippet#expandable_or_jumpable()
-		\ ? "\<Plug>(neosnippet_expand_or_jump)" : "\<ESC>o"
-	xmap <silent><C-s> <Plug>(neosnippet_register_oneshot_snippet)
-	smap <silent>L     <Plug>(neosnippet_jump_or_expand)
-	xmap <silent>L     <Plug>(neosnippet_expand_target)
+if dein#tap('neosnippet')
+	" Plugin key-mappings.
+	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+	imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+	smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+	xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+	" SuperTab like snippets behavior.
+	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+	"imap <expr><TAB>
+	" \ pumvisible() ? "\<C-n>" :
+	" \ neosnippet#expandable_or_jumpable() ?
+	" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+	smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+	\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+	" For conceal markers.
+	if has('conceal')
+		set conceallevel=2 concealcursor=niv
+	endif
+		let g:deoplete#enable_at_startup = 1
 endif
 " }}} neosnippet
 "  NERDTree {{{
@@ -112,6 +128,7 @@ if dein#tap('nerdtree')
 	let g:NERDTreeMapOpenRecursively = 't'
 	let g:NERDTreeMapCloseChildren = 'T'
 	let g:NERDTreeMapToggleHidden = '.'
+	let g:NERDTreeQuitOnOpen = 1
 endif
 
 " NERDTree }}}
@@ -122,18 +139,24 @@ if dein#tap('nvim-r')
 	let R_assign = 2
 endif
 " }}} nvim-r
-"  tagbar {{{
-if dein#tap('tagbar')
-	let g:tagbar_left = 1
+"  python-mode {{{
+if dein#tap('python-mode')
+	let g:pymode = 1
+	let g:pymode_python = 'python3'
 endif
 
-" tagbar }}}
+" NERDTree }}}
 "  SuperTab {{{
 if dein#tap('supertab')
 	let g:SuperTabMappingForward = '<s-tab>' " (default value: '<tab>')
 	let g:SuperTabMappingBackward = '<tab>' " (default value: '<s-tab>')
 endif
 " SuperTab }}}
+ "  tagbar {{{
+ if dein#tap('tagbar')
+	 let g:tagbar_left = 1
+ endif
+ " tagbar }}}
 " {{{ vim-airline
 if dein#tap('vim-airline')
 	let g:airline#extensions#tabline#enabled = 1
@@ -144,52 +167,6 @@ if dein#tap('vim-airline')
 	let g:airline_powerline_fonts = 1
 endif
 " }}} airline
-" {{{ vim-colorschemes
-if dein#tap('vim-colorschemes')
-	colorscheme Atelier_HeathDark
-endif
-" }}} vim-colorschemes
-" {{{ vim-easygit
-if dein#tap('vim-easygit')
-	let g:easygit_enable_command = 1	
-	nnoremap <silent> <leader>gd :Gdiff<CR>
-	nnoremap <silent> <leader>gD :Gdiffoff<CR>
-	nnoremap <silent> <leader>gc :Gcommit<CR>
-	nnoremap <silent> <leader>gb :Gblame<CR>
-	nnoremap <silent> <leader>gB :Gbrowse<CR>
-	nnoremap <silent> <leader>gS :Gstatus<CR>
-	nnoremap <silent> <leader>gp :Gpush<CR>
-endif
-" }}} vim-easygit
-" {{{ vim-easymotion
-if dein#tap('vim-easymotion')
-	" <Leader>f{char} to move to {char}
-	map  <Leader>f <Plug>(easymotion-bd-f)
-	nmap <Leader>f <Plug>(easymotion-overwin-f)
-
-	" s{char}{char} to move to {char}{char}
-	nmap s <Plug>(easymotion-overwin-f2)
-
-	" Move to line
-	map <Leader>L <Plug>(easymotion-bd-jk)
-	nmap <Leader>L <Plug>(easymotion-overwin-line)
-
-	" Move to word
-	map  <Leader>w <Plug>(easymotion-bd-w)
-	nmap <Leader>w <Plug>(easymotion-overwin-w)
-	nmap s <Plug>(easymotion-s2)
-	nmap t <Plug>(easymotion-t2)
-	" Gif config
-	map  / <Plug>(easymotion-sn)
-	omap / <Plug>(easymotion-tn)
-
-	" These `n` & `N` mappings are options. You do not have to map `n` & `N` to EasyMotion.
-	" Without these mappings, `n` & `N` works fine. (These mappings just provide
-	" different highlight method and have some other features )
-	map  n <Plug>(easymotion-next)
-	map  N <Plug>(easymotion-prev)
-endif
-" }}} vim-easymotion
 " {{{ vim-indent-guides
 if dein#tap('vim-indent-guides')
 	let g:indent_guides_guide_size = 1
@@ -201,27 +178,41 @@ if dein#tap('vim-indent-guides')
 	set ts=2 sw=2 et
 endif
 " }}} vim-indent-guides
-" {{{ vimfiler
-if dein#tap('vimfiler.vim')
-	let g:vimfiler_as_default_explorer = 1
+" vim-cmake {{{
+if dein#tap('vim-cmake')
+	let g:cmake_cxx_compiler='g++'
 endif
-" }}} vimfiler
+" vim-cmake }}}
+" {{{ vim-easygit
+if dein#tap('vim-easygit')
+	let g:easygit_enable_command = 1
+	nnoremap <silent> <leader>gd :Gdiff<CR>
+	nnoremap <silent> <leader>gD :Gdiffoff<CR>
+	nnoremap <silent> <leader>gc :Gcommit<CR>
+	nnoremap <silent> <leader>gb :Gblame<CR>
+	nnoremap <silent> <leader>gB :Gbrowse<CR>
+	nnoremap <silent> <leader>gS :Gstatus<CR>
+	nnoremap <silent> <leader>gp :Gpush<CR>
+endif
+" }}} vim-easygit
 " {{{ vim-project
 if dein#tap('vim-project')
 	let g:project_use_nerdtree = 1
-let g:project_enable_welcome = 0
+	let g:project_enable_welcome = 0
 	set rtp+=~/.vim/bundle/vim-project/
 	call project#rc("~/Code")
 	Project  'scratch'
-	Project  '~/.config/nvim/' , 'vimrc'
 	Project  '~/work/gleason/gleason-research' , 'gleason'
 	Project  '~/school/fall_2018/comptag/reconstruction' , 'reconstruction'
 	Project  '~/school/fall_2018/ustat_paper/ml_project' , 'ustat'
+	Project  '~/.config/nvim/' , 'vimrc'
+	Project  '~/.config/awesome' , 'awesomerc'
 endif
 " }}} vim-project
 " {{{ vim-slime
 if dein#tap('vim-slime')
 	let g:slime_target = "tmux"
+	let g:slime_python_ipython = 1
 endif
 " }}} vim-slime
 " {{{ which-key
@@ -235,17 +226,24 @@ if dein#tap('vim-which-key')
 			\ }
 	let g:which_key_map.b = {
 				\ 'name' : '+buffer' ,
+				\ '?' : ['Buffers'   , 'fzf-buffer']      ,
 				\ '1' : ['b1'        , 'buffer 1']        ,
 				\ '2' : ['b2'        , 'buffer 2']        ,
 				\ 'd' : ['bd'        , 'delete-buffer']   ,
 				\ 'f' : ['bfirst'    , 'first-buffer']    ,
 				\ 'h' : ['Startify'  , 'home-buffer']     ,
-				\ 'w' : ['Welcome'  , 'welcome-buffer']     ,
 				\ 'l' : ['blast'     , 'last-buffer']     ,
 				\ 'n' : ['bnext'     , 'next-buffer']     ,
 				\ 'p' : ['bprevious' , 'previous-buffer'] ,
-				\ '?' : ['Buffers'   , 'fzf-buffer']      ,
+				\ 's' : ['w' , 'Write Buffer'] ,
+				\ 'S' : ['w!' , 'Force Write Buffer'] ,
+				\ 'w' : ['Welcome'  , 'welcome-buffer']     ,
 				\ }
+	let g:which_key_map['c'] = {
+			\ 'name' : '+compile' ,
+			\ 'c' : ['CMake'    , 'Run CMake']            ,
+			\ 'm' : ['make'    , 'Run Make']            ,
+			\ }
 	let g:which_key_map.e = {
 				\ 'name' : '+easyjump' ,
 				\ 'e' : ['<Plug>(easymotion-overwin-f2)'        , 'easymotion']        ,
@@ -322,38 +320,18 @@ nnoremap <silent> <localleader> :WhichKey ';'<CR>
 "	vnoremap <silent> <localleader> :WhichKey ';'<CR>
 endif
 " }}} deoplete
-" vim-cmake {{{
-let g:cmake_cxx_compiler='g++'
-" vim-cmake }}}
+" {{{ languageclient
+if dein#tap('LanguageClient-neovim')
+    let g:LanguageClient_serverCommands = {
+        \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+        \ }
+endif
+" }}} languageclient
 
-" {{{ Old settings
-" if dein#tap('vim-denite-z')
-" 	command! -nargs=+ -complete=file Z
-" 		\ call denite#start([{'name': 'z', 'args': [<q-args>], {'immediately': 1}}])
-" endif
-"
-" if dein#tap('tagbar')
-" 	nnoremap <silent> <Leader>o   :<C-u>TagbarOpenAutoClose<CR>
-"
-" 	" Also use h/l to open/close folds
-" 	let g:tagbar_map_closefold = ['h', '-', 'zc']
-" 	let g:tagbar_map_openfold = ['l', '+', 'zo']
-" endif
-"
-" if dein#tap('nerdtree')
-" 	let g:NERDTreeMapOpenSplit = 'sv'
-" 	let g:NERDTreeMapOpenVSplit = 'sg'
-" 	let g:NERDTreeMapOpenInTab = 'st'
-" 	let g:NERDTreeMapOpenInTabSilent = 'sT'
-" 	let g:NERDTreeMapUpdirKeepOpen = '<BS>'
-" 	let g:NERDTreeMapOpenRecursively = 't'
-" 	let g:NERDTreeMapCloseChildren = 'T'
-" 	let g:NERDTreeMapToggleHidden = '.'
-"
-" 	nnoremap <silent> <LocalLeader>e :<C-u>NERDTreeToggle<CR>
-" 	nnoremap <silent> <LocalLeader>a :<C-u>NERDTreeFind<CR>
-" endif
-"
+" Ye Olde Plugin Settings
+"---------------------------------------------------------
+
+" " {{{ neosnippet
 " if dein#tap('neosnippet.vim')
 " 	imap <expr><C-o> neosnippet#expandable_or_jumpable()
 " 		\ ? "\<Plug>(neosnippet_expand_or_jump)" : "\<ESC>o"
@@ -361,263 +339,316 @@ let g:cmake_cxx_compiler='g++'
 " 	smap <silent>L     <Plug>(neosnippet_jump_or_expand)
 " 	xmap <silent>L     <Plug>(neosnippet_expand_target)
 " endif
-"
-" if dein#tap('emmet-vim')
-" 	autocmd MyAutoCmd FileType html,css,jsx,javascript,javascript.jsx
-" 		\ EmmetInstall
-" 		\ | imap <buffer> <C-Return> <Plug>(emmet-expand-abbr)
+" " }}} neosnippet
+" " vim-asyncmake {{{
+" if dein#tap('vim-asyncmake')
+"   let b:asyncmakeprg = "g++ %"
 " endif
-"
-" if dein#tap('vim-operator-surround')
-" 	map <silent>sa <Plug>(operator-surround-append)
-" 	map <silent>sd <Plug>(operator-surround-delete)
-" 	map <silent>sr <Plug>(operator-surround-replace)
-" 	nmap <silent>saa <Plug>(operator-surround-append)<Plug>(textobj-multiblock-i)
-" 	nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)
-" 	nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)
+" " vim-asyncmake }}}
+" " {{{ vim-colorschemes
+" if dein#tap('vim-colorschemes')
+" 	colorscheme Atelier_HeathDark
 " endif
-"
-" if dein#tap('vim-operator-replace')
-" 	xmap p <Plug>(operator-replace)
+" " }}} vim-colorschemes
+" " {{{ vimfiler
+" if dein#tap('vimfiler.vim')
+" 	let g:vimfiler_as_default_explorer = 1
 " endif
+" " }}} vimfiler
 "
-" if dein#tap('vim-operator-flashy')
-" 	map y <Plug>(operator-flashy)
-" 	nmap Y <Plug>(operator-flashy)$
-" endif
-"
-" if dein#tap('vim-niceblock')
-" 	xmap I  <Plug>(niceblock-I)
-" 	xmap A  <Plug>(niceblock-A)
-" endif
-"
-" if dein#tap('accelerated-jk')
-" 	nmap <silent>j <Plug>(accelerated_jk_gj)
-" 	nmap <silent>k <Plug>(accelerated_jk_gk)
-" endif
-"
-" if dein#tap('vim-edgemotion')
-" 	map gj <Plug>(edgemotion-j)
-" 	map gk <Plug>(edgemotion-k)
-" 	xmap gj <Plug>(edgemotion-j)
-" 	xmap gk <Plug>(edgemotion-k)
-" endif
-"
-" if dein#tap('vim-quickhl')
-" 	nmap <Leader>, <Plug>(quickhl-manual-this)
-" 	xmap <Leader>, <Plug>(quickhl-manual-this)
-" endif
-"
-" if dein#tap('vim-sidemenu')
-" 	nmap <Leader>l <Plug>(sidemenu)
-" 	xmap <Leader>l <Plug>(sidemenu-visual)
-" endif
-"
-" if dein#tap('vim-indent-guides')
-" 	nmap <silent><Leader>ti :<C-u>IndentGuidesToggle<CR>
-" endif
-"
-" if dein#tap('vim-bookmarks')
-" 	nmap ma :<C-u>cgetexpr bm#location_list()<CR>
-" 		\ :<C-u>Denite quickfix -buffer-name=list<CR>
-" 	nmap mn <Plug>BookmarkNext
-" 	nmap mp <Plug>BookmarkPrev
-" 	nmap mm <Plug>BookmarkToggle
-" 	nmap mi <Plug>BookmarkAnnotate
-" endif
-"
-" if dein#tap('committia.vim')
-" 	let g:committia_hooks = {}
-" 	function! g:committia_hooks.edit_open(info)
-" 		imap <buffer><C-d> <Plug>(committia-scroll-diff-down-half)
-" 		imap <buffer><C-u> <Plug>(committia-scroll-diff-up-half)
-"
-" 		setlocal winminheight=1 winheight=1
-" 		resize 10
-" 		startinsert
-" 	endfunction
-" endif
-"
-" if dein#tap('python_match.vim')
-" 	nmap <buffer> {{ [%
-" 	nmap <buffer> }} ]%
-" endif
-"
-" if dein#tap('goyo.vim')
-" 	nnoremap <Leader>G :Goyo<CR>
-" endif
-"
-" if dein#tap('vim-peekaboo')
-" 	nnoremap <buffer> <silent> " :<c-u>call peekaboo#peek(v:count1, 'quote',  0)<cr>
-" 	xnoremap <buffer> <silent> " :<c-u>call peekaboo#peek(v:count1, 'quote',  1)<cr>
-" 	nnoremap <buffer> <silent> @ :<c-u>call peekaboo#peek(v:count1, 'replay', 0)<cr>
-" 	inoremap <buffer> <silent> <c-r> <c-o>:call peekaboo#peek(1, 'ctrl-r',  0)<cr>
-" endif
-"
-" if dein#tap('vimwiki')
-" 	nnoremap <silent> <Leader>W :<C-u>VimwikiIndex<CR>
-" endif
-"
-" if dein#tap('vim-choosewin')
-" 	nmap -         <Plug>(choosewin)
-" 	nmap <Leader>- :<C-u>ChooseWinSwapStay<CR>
-" endif
-"
-" if dein#tap('jedi-vim')
-" 	let g:jedi#completions_command = ''
-" 	let g:jedi#documentation_command = 'K'
-" 	let g:jedi#goto_command = '<C-]>'
-" 	let g:jedi#goto_assignments_command = '<leader>g'
-" 	let g:jedi#rename_command = '<Leader>r'
-" 	let g:jedi#usages_command = '<Leader>n'
-" endif
-"
-" if dein#tap('tern_for_vim')
-" 	autocmd MyAutoCmd FileType javascript,jsx,javascript.jsx
-" 		\  nnoremap <silent><buffer> K          :<C-u>TernDoc<CR>
-" 		\| nnoremap <silent><buffer> <C-]>      :<C-u>TernDefSplit<CR>
-" 		\| nnoremap <silent><buffer> <leader>g  :<C-u>TernType<CR>
-" 		\| nnoremap <silent><buffer> <leader>n  :<C-u>TernRefs<CR>
-" 		\| nnoremap <silent><buffer> <leader>r  :<C-u>TernRename<CR>
-" endif
-"
-" if dein#tap('vim-gitgutter')
-" 	nmap <Leader>hj <Plug>GitGutterNextHunk
-" 	nmap <Leader>hk <Plug>GitGutterPrevHunk
-" 	nmap <Leader>hs <Plug>GitGutterStageHunk
-" 	nmap <Leader>hr <Plug>GitGutterUndoHunk
-" 	nmap <Leader>hp <Plug>GitGutterPreviewHunk
-" endif
-"
-" if dein#tap('vim-go')
-" 	autocmd MyAutoCmd FileType go
-" 		\   nmap <C-]> <Plug>(go-def)
-" 		\ | nmap <Leader>god  <Plug>(go-describe)
-" 		\ | nmap <Leader>goc  <Plug>(go-callees)
-" 		\ | nmap <Leader>goC  <Plug>(go-callers)
-" 		\ | nmap <Leader>goi  <Plug>(go-info)
-" 		\ | nmap <Leader>gom  <Plug>(go-implements)
-" 		\ | nmap <Leader>gos  <Plug>(go-callstack)
-" 		\ | nmap <Leader>goe  <Plug>(go-referrers)
-" 		\ | nmap <Leader>gor  <Plug>(go-run)
-" 		\ | nmap <Leader>gov  <Plug>(go-vet)
-" endif
-"
-" if dein#tap('phpcomplete-extended')
-" 	autocmd MyAutoCmd FileType php
-" 		\   nmap <silent> <unique> K <Plug>(phpcomplete-extended-doc)
-" 		\ | nmap <silent> <unique> <C-]> <Plug>(phpcomplete-extended-goto)
-" 		\ | nmap <silent> <unique> <Leader>a <Plug>(phpcomplete-extended-add-use)
-" endif
-"
-" if dein#tap('vimagit')
-" 	nnoremap <silent> mg :Magit<CR>
-"
-" 	" autocmd MyAutoCmd FileType magit
-" 	" 	\ nnoremap <silent><buffer> <CR> za
-" endif
-"
-" if dein#tap('vim-easygit')
-" 	nnoremap <silent> <leader>gd :Gdiff<CR>
-" 	nnoremap <silent> <leader>gD :Gdiffoff<CR>
-" 	nnoremap <silent> <leader>gc :Gcommit<CR>
-" 	nnoremap <silent> <leader>gb :Gblame<CR>
-" 	nnoremap <silent> <leader>gB :Gbrowse<CR>
-" 	nnoremap <silent> <leader>gS :Gstatus<CR>
-" 	nnoremap <silent> <leader>gp :Gpush<CR>
-" endif
-"
-" if dein#tap('undotree')
-" 	nnoremap <Leader>gu :UndotreeToggle<CR>
-" endif
-"
-" if dein#tap('vim-online-thesaurus')
-" 	nnoremap <silent> <Leader>K :<C-u>OnlineThesaurusCurrentWord<CR>
-" endif
-"
-" if dein#tap('vim-asterisk')
-" 	map *   <Plug>(asterisk-g*)
-" 	map g*  <Plug>(asterisk-*)
-" 	map #   <Plug>(asterisk-g#)
-" 	map g#  <Plug>(asterisk-#)
-"
-" 	map z*  <Plug>(asterisk-z*)
-" 	map gz* <Plug>(asterisk-gz*)
-" 	map z#  <Plug>(asterisk-z#)
-" 	map gz# <Plug>(asterisk-gz#)
-" endif
-"
-" if dein#tap('vim-expand-region')
-" 	xmap v <Plug>(expand_region_expand)
-" 	xmap V <Plug>(expand_region_shrink)
-" endif
-"
-" if dein#tap('sideways.vim')
-" 	nnoremap <silent> m" :SidewaysJumpLeft<CR>
-" 	nnoremap <silent> m' :SidewaysJumpRight<CR>
-" 	omap <silent> a, <Plug>SidewaysArgumentTextobjA
-" 	xmap <silent> a, <Plug>SidewaysArgumentTextobjA
-" 	omap <silent> i, <Plug>SidewaysArgumentTextobjI
-" 	xmap <silent> i, <Plug>SidewaysArgumentTextobjI
-" endif
-"
-" if dein#tap('splitjoin.vim')
-" 	let g:splitjoin_join_mapping = ''
-" 	let g:splitjoin_split_mapping = ''
-" 	nmap sj :SplitjoinJoin<CR>
-" 	nmap sk :SplitjoinSplit<CR>
-" endif
-"
-" if dein#tap('linediff.vim')
-" 	vnoremap ,df :Linediff<CR>
-" 	vnoremap ,da :LinediffAdd<CR>
-" 	nnoremap ,ds :<C-u>LinediffShow<CR>
-" 	nnoremap ,dr :<C-u>LinediffReset<CR>
-" endif
-"
-" if dein#tap('dsf.vim')
-" 	nmap dsf <Plug>DsfDelete
-" 	nmap csf <Plug>DsfChange
-" endif
-"
-" if dein#tap('vim-commentary')
-" 	xmap <Leader>v  <Plug>Commentary
-" 	nmap <Leader>v  <Plug>CommentaryLine
-" 	xmap gc  <Plug>Commentary
-" 	nmap gc  <Plug>Commentary
-" 	omap gc  <Plug>Commentary
-" 	nmap gcc <Plug>CommentaryLine
-" 	nmap cgc <Plug>ChangeCommentary
-" 	nmap gcu <Plug>Commentary<Plug>Commentary
-" endif
-"
-" if dein#tap('vim-easymotion')
-" 	nmap ss <Plug>(easymotion-s2)
-" 	nmap sd <Plug>(easymotion-s)
-" 	nmap sf <Plug>(easymotion-overwin-f)
-" 	map  sh <Plug>(easymotion-linebackward)
-" 	map  sl <Plug>(easymotion-lineforward)
-" 	" map  sj <Plug>(easymotion-j)
-" 	" map  sk <Plug>(easymotion-k)
-" 	map  s/ <Plug>(easymotion-sn)
-" 	omap s/ <Plug>(easymotion-tn)
-" 	map  sn <Plug>(easymotion-next)
-" 	map  sp <Plug>(easymotion-prev)
-" endif
-"
-" if dein#tap('vim-textobj-multiblock')
-" 	omap <silent> ab <Plug>(textobj-multiblock-a)
-" 	omap <silent> ib <Plug>(textobj-multiblock-i)
-" 	xmap <silent> ab <Plug>(textobj-multiblock-a)
-" 	xmap <silent> ib <Plug>(textobj-multiblock-i)
-" endif
-"
-" if dein#tap('vim-textobj-function')
-" 	omap <silent> af <Plug>(textobj-function-a)
-" 	omap <silent> if <Plug>(textobj-function-i)
-" 	xmap <silent> af <Plug>(textobj-function-a)
-" 	xmap <silent> if <Plug>(textobj-function-i)
-" endif
-" }}} Old settings
+" " {{{ Old settings
+" " if dein#tap('vim-denite-z')
+" " 	command! -nargs=+ -complete=file Z
+" " 		\ call denite#start([{'name': 'z', 'args': [<q-args>], {'immediately': 1}}])
+" " endif
+" "
+" " if dein#tap('tagbar')
+" " 	nnoremap <silent> <Leader>o   :<C-u>TagbarOpenAutoClose<CR>
+" "
+" " 	" Also use h/l to open/close folds
+" " 	let g:tagbar_map_closefold = ['h', '-', 'zc']
+" " 	let g:tagbar_map_openfold = ['l', '+', 'zo']
+" " endif
+" "
+" " if dein#tap('nerdtree')
+" " 	let g:NERDTreeMapOpenSplit = 'sv'
+" " 	let g:NERDTreeMapOpenVSplit = 'sg'
+" " 	let g:NERDTreeMapOpenInTab = 'st'
+" " 	let g:NERDTreeMapOpenInTabSilent = 'sT'
+" " 	let g:NERDTreeMapUpdirKeepOpen = '<BS>'
+" " 	let g:NERDTreeMapOpenRecursively = 't'
+" " 	let g:NERDTreeMapCloseChildren = 'T'
+" " 	let g:NERDTreeMapToggleHidden = '.'
+" "
+" " 	nnoremap <silent> <LocalLeader>e :<C-u>NERDTreeToggle<CR>
+" " 	nnoremap <silent> <LocalLeader>a :<C-u>NERDTreeFind<CR>
+" " endif
+" "
+" " if dein#tap('neosnippet.vim')
+" " 	imap <expr><C-o> neosnippet#expandable_or_jumpable()
+" " 		\ ? "\<Plug>(neosnippet_expand_or_jump)" : "\<ESC>o"
+" " 	xmap <silent><C-s> <Plug>(neosnippet_register_oneshot_snippet)
+" " 	smap <silent>L     <Plug>(neosnippet_jump_or_expand)
+" " 	xmap <silent>L     <Plug>(neosnippet_expand_target)
+" " endif
+" "
+" " if dein#tap('emmet-vim')
+" " 	autocmd MyAutoCmd FileType html,css,jsx,javascript,javascript.jsx
+" " 		\ EmmetInstall
+" " 		\ | imap <buffer> <C-Return> <Plug>(emmet-expand-abbr)
+" " endif
+" "
+" " if dein#tap('vim-operator-surround')
+" " 	map <silent>sa <Plug>(operator-surround-append)
+" " 	map <silent>sd <Plug>(operator-surround-delete)
+" " 	map <silent>sr <Plug>(operator-surround-replace)
+" " 	nmap <silent>saa <Plug>(operator-surround-append)<Plug>(textobj-multiblock-i)
+" " 	nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)
+" " 	nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)
+" " endif
+" "
+" " if dein#tap('vim-operator-replace')
+" " 	xmap p <Plug>(operator-replace)
+" " endif
+" "
+" " if dein#tap('vim-operator-flashy')
+" " 	map y <Plug>(operator-flashy)
+" " 	nmap Y <Plug>(operator-flashy)$
+" " endif
+" "
+" " if dein#tap('vim-niceblock')
+" " 	xmap I  <Plug>(niceblock-I)
+" " 	xmap A  <Plug>(niceblock-A)
+" " endif
+" "
+" " if dein#tap('accelerated-jk')
+" " 	nmap <silent>j <Plug>(accelerated_jk_gj)
+" " 	nmap <silent>k <Plug>(accelerated_jk_gk)
+" " endif
+" "
+" " if dein#tap('vim-edgemotion')
+" " 	map gj <Plug>(edgemotion-j)
+" " 	map gk <Plug>(edgemotion-k)
+" " 	xmap gj <Plug>(edgemotion-j)
+" " 	xmap gk <Plug>(edgemotion-k)
+" " endif
+" "
+" " if dein#tap('vim-quickhl')
+" " 	nmap <Leader>, <Plug>(quickhl-manual-this)
+" " 	xmap <Leader>, <Plug>(quickhl-manual-this)
+" " endif
+" "
+" " if dein#tap('vim-sidemenu')
+" " 	nmap <Leader>l <Plug>(sidemenu)
+" " 	xmap <Leader>l <Plug>(sidemenu-visual)
+" " endif
+" "
+" " if dein#tap('vim-indent-guides')
+" " 	nmap <silent><Leader>ti :<C-u>IndentGuidesToggle<CR>
+" " endif
+" "
+" " if dein#tap('vim-bookmarks')
+" " 	nmap ma :<C-u>cgetexpr bm#location_list()<CR>
+" " 		\ :<C-u>Denite quickfix -buffer-name=list<CR>
+" " 	nmap mn <Plug>BookmarkNext
+" " 	nmap mp <Plug>BookmarkPrev
+" " 	nmap mm <Plug>BookmarkToggle
+" " 	nmap mi <Plug>BookmarkAnnotate
+" " endif
+" "
+" " if dein#tap('committia.vim')
+" " 	let g:committia_hooks = {}
+" " 	function! g:committia_hooks.edit_open(info)
+" " 		imap <buffer><C-d> <Plug>(committia-scroll-diff-down-half)
+" " 		imap <buffer><C-u> <Plug>(committia-scroll-diff-up-half)
+" "
+" " 		setlocal winminheight=1 winheight=1
+" " 		resize 10
+" " 		startinsert
+" " 	endfunction
+" " endif
+" "
+" " if dein#tap('python_match.vim')
+" " 	nmap <buffer> {{ [%
+" " 	nmap <buffer> }} ]%
+" " endif
+" "
+" " if dein#tap('goyo.vim')
+" " 	nnoremap <Leader>G :Goyo<CR>
+" " endif
+" "
+" " if dein#tap('vim-peekaboo')
+" " 	nnoremap <buffer> <silent> " :<c-u>call peekaboo#peek(v:count1, 'quote',  0)<cr>
+" " 	xnoremap <buffer> <silent> " :<c-u>call peekaboo#peek(v:count1, 'quote',  1)<cr>
+" " 	nnoremap <buffer> <silent> @ :<c-u>call peekaboo#peek(v:count1, 'replay', 0)<cr>
+" " 	inoremap <buffer> <silent> <c-r> <c-o>:call peekaboo#peek(1, 'ctrl-r',  0)<cr>
+" " endif
+" "
+" " if dein#tap('vimwiki')
+" " 	nnoremap <silent> <Leader>W :<C-u>VimwikiIndex<CR>
+" " endif
+" "
+" " if dein#tap('vim-choosewin')
+" " 	nmap -         <Plug>(choosewin)
+" " 	nmap <Leader>- :<C-u>ChooseWinSwapStay<CR>
+" " endif
+" "
+" " if dein#tap('jedi-vim')
+" " 	let g:jedi#completions_command = ''
+" " 	let g:jedi#documentation_command = 'K'
+" " 	let g:jedi#goto_command = '<C-]>'
+" " 	let g:jedi#goto_assignments_command = '<leader>g'
+" " 	let g:jedi#rename_command = '<Leader>r'
+" " 	let g:jedi#usages_command = '<Leader>n'
+" " endif
+" "
+" " if dein#tap('tern_for_vim')
+" " 	autocmd MyAutoCmd FileType javascript,jsx,javascript.jsx
+" " 		\  nnoremap <silent><buffer> K          :<C-u>TernDoc<CR>
+" " 		\| nnoremap <silent><buffer> <C-]>      :<C-u>TernDefSplit<CR>
+" " 		\| nnoremap <silent><buffer> <leader>g  :<C-u>TernType<CR>
+" " 		\| nnoremap <silent><buffer> <leader>n  :<C-u>TernRefs<CR>
+" " 		\| nnoremap <silent><buffer> <leader>r  :<C-u>TernRename<CR>
+" " endif
+" "
+" " if dein#tap('vim-gitgutter')
+" " 	nmap <Leader>hj <Plug>GitGutterNextHunk
+" " 	nmap <Leader>hk <Plug>GitGutterPrevHunk
+" " 	nmap <Leader>hs <Plug>GitGutterStageHunk
+" " 	nmap <Leader>hr <Plug>GitGutterUndoHunk
+" " 	nmap <Leader>hp <Plug>GitGutterPreviewHunk
+" " endif
+" "
+" " if dein#tap('vim-go')
+" " 	autocmd MyAutoCmd FileType go
+" " 		\   nmap <C-]> <Plug>(go-def)
+" " 		\ | nmap <Leader>god  <Plug>(go-describe)
+" " 		\ | nmap <Leader>goc  <Plug>(go-callees)
+" " 		\ | nmap <Leader>goC  <Plug>(go-callers)
+" " 		\ | nmap <Leader>goi  <Plug>(go-info)
+" " 		\ | nmap <Leader>gom  <Plug>(go-implements)
+" " 		\ | nmap <Leader>gos  <Plug>(go-callstack)
+" " 		\ | nmap <Leader>goe  <Plug>(go-referrers)
+" " 		\ | nmap <Leader>gor  <Plug>(go-run)
+" " 		\ | nmap <Leader>gov  <Plug>(go-vet)
+" " endif
+" "
+" " if dein#tap('phpcomplete-extended')
+" " 	autocmd MyAutoCmd FileType php
+" " 		\   nmap <silent> <unique> K <Plug>(phpcomplete-extended-doc)
+" " 		\ | nmap <silent> <unique> <C-]> <Plug>(phpcomplete-extended-goto)
+" " 		\ | nmap <silent> <unique> <Leader>a <Plug>(phpcomplete-extended-add-use)
+" " endif
+" "
+" " if dein#tap('vimagit')
+" " 	nnoremap <silent> mg :Magit<CR>
+" "
+" " 	" autocmd MyAutoCmd FileType magit
+" " 	" 	\ nnoremap <silent><buffer> <CR> za
+" " endif
+" "
+" " if dein#tap('vim-easygit')
+" " 	nnoremap <silent> <leader>gd :Gdiff<CR>
+" " 	nnoremap <silent> <leader>gD :Gdiffoff<CR>
+" " 	nnoremap <silent> <leader>gc :Gcommit<CR>
+" " 	nnoremap <silent> <leader>gb :Gblame<CR>
+" " 	nnoremap <silent> <leader>gB :Gbrowse<CR>
+" " 	nnoremap <silent> <leader>gS :Gstatus<CR>
+" " 	nnoremap <silent> <leader>gp :Gpush<CR>
+" " endif
+" "
+" " if dein#tap('undotree')
+" " 	nnoremap <Leader>gu :UndotreeToggle<CR>
+" " endif
+" "
+" " if dein#tap('vim-online-thesaurus')
+" " 	nnoremap <silent> <Leader>K :<C-u>OnlineThesaurusCurrentWord<CR>
+" " endif
+" "
+" " if dein#tap('vim-asterisk')
+" " 	map *   <Plug>(asterisk-g*)
+" " 	map g*  <Plug>(asterisk-*)
+" " 	map #   <Plug>(asterisk-g#)
+" " 	map g#  <Plug>(asterisk-#)
+" "
+" " 	map z*  <Plug>(asterisk-z*)
+" " 	map gz* <Plug>(asterisk-gz*)
+" " 	map z#  <Plug>(asterisk-z#)
+" " 	map gz# <Plug>(asterisk-gz#)
+" " endif
+" "
+" " if dein#tap('vim-expand-region')
+" " 	xmap v <Plug>(expand_region_expand)
+" " 	xmap V <Plug>(expand_region_shrink)
+" " endif
+" "
+" " if dein#tap('sideways.vim')
+" " 	nnoremap <silent> m" :SidewaysJumpLeft<CR>
+" " 	nnoremap <silent> m' :SidewaysJumpRight<CR>
+" " 	omap <silent> a, <Plug>SidewaysArgumentTextobjA
+" " 	xmap <silent> a, <Plug>SidewaysArgumentTextobjA
+" " 	omap <silent> i, <Plug>SidewaysArgumentTextobjI
+" " 	xmap <silent> i, <Plug>SidewaysArgumentTextobjI
+" " endif
+" "
+" " if dein#tap('splitjoin.vim')
+" " 	let g:splitjoin_join_mapping = ''
+" " 	let g:splitjoin_split_mapping = ''
+" " 	nmap sj :SplitjoinJoin<CR>
+" " 	nmap sk :SplitjoinSplit<CR>
+" " endif
+" "
+" " if dein#tap('linediff.vim')
+" " 	vnoremap ,df :Linediff<CR>
+" " 	vnoremap ,da :LinediffAdd<CR>
+" " 	nnoremap ,ds :<C-u>LinediffShow<CR>
+" " 	nnoremap ,dr :<C-u>LinediffReset<CR>
+" " endif
+" "
+" " if dein#tap('dsf.vim')
+" " 	nmap dsf <Plug>DsfDelete
+" " 	nmap csf <Plug>DsfChange
+" " endif
+" "
+" " if dein#tap('vim-commentary')
+" " 	xmap <Leader>v  <Plug>Commentary
+" " 	nmap <Leader>v  <Plug>CommentaryLine
+" " 	xmap gc  <Plug>Commentary
+" " 	nmap gc  <Plug>Commentary
+" " 	omap gc  <Plug>Commentary
+" " 	nmap gcc <Plug>CommentaryLine
+" " 	nmap cgc <Plug>ChangeCommentary
+" " 	nmap gcu <Plug>Commentary<Plug>Commentary
+" " endif
+" "
+" " if dein#tap('vim-easymotion')
+" " 	nmap ss <Plug>(easymotion-s2)
+" " 	nmap sd <Plug>(easymotion-s)
+" " 	nmap sf <Plug>(easymotion-overwin-f)
+" " 	map  sh <Plug>(easymotion-linebackward)
+" " 	map  sl <Plug>(easymotion-lineforward)
+" " 	" map  sj <Plug>(easymotion-j)
+" " 	" map  sk <Plug>(easymotion-k)
+" " 	map  s/ <Plug>(easymotion-sn)
+" " 	omap s/ <Plug>(easymotion-tn)
+" " 	map  sn <Plug>(easymotion-next)
+" " 	map  sp <Plug>(easymotion-prev)
+" " endif
+" "
+" " if dein#tap('vim-textobj-multiblock')
+" " 	omap <silent> ab <Plug>(textobj-multiblock-a)
+" " 	omap <silent> ib <Plug>(textobj-multiblock-i)
+" " 	xmap <silent> ab <Plug>(textobj-multiblock-a)
+" " 	xmap <silent> ib <Plug>(textobj-multiblock-i)
+" " endif
+" "
+" " if dein#tap('vim-textobj-function')
+" " 	omap <silent> af <Plug>(textobj-function-a)
+" " 	omap <silent> if <Plug>(textobj-function-i)
+" " 	xmap <silent> af <Plug>(textobj-function-a)
+" " 	xmap <silent> if <Plug>(textobj-function-i)
+" " endif
+" " }}} Old settings
 
 " vim: set ts=2 sw=2 tw=80 noet foldmethod=marker :
+

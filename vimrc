@@ -1,12 +1,12 @@
 " {{{ Document Header
-" Purpose: Source Configuration
+" Filename: vimrc
+" Purpose: Root Configuration... (i.e. basically a control for vanilla vs not)
 " }}} Document Header
 
-" Note: Skip initialization for vim-tiny or vim-small.
-" if 1
-execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/vimrc'
-" endif
+" {{{ Load non-vanilla config
+if !exists("g:Vanilla")
+	execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/vimrc'
+endif
+" }}} Load non-vanilla config
 
-colorscheme onedark " TODO: Figure out appropriate place for this
-
-" vim: set foldmethod=marker :
+" vim: set foldmethod=marker ts=2 :

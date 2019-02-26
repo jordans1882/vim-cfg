@@ -1,42 +1,16 @@
+" {{{ Document Header
+" Filename: theme.vim
+" Description: Default theme
+" }}} Document Header
 
-" Theme
-" -----
+" {{{ Utility Functions
+" TODO: Create Toggle background dark/light functions?
+" TODO: Create toggle theme to light vs dark
 
-" Enable 256 color terminal
-set t_Co=256
+" }}} Utility Functions
+" {{{ Default Theme
+colorscheme desert
+" set background=light
+" }}} Default Theme
 
-" Enable true color
-if has('termguicolors')
-"	set termguicolors
-	colorscheme Monokai
-endif
-
-" if has('gui_running')
-" 	set background=dark
-" 	set lines=40
-" 	set columns=150
-" endif
-" 
-" function! s:theme_reload(name)
-" 	let theme_path = $VIMPATH.'/themes/'.a:name.'.vim'
-" 	if filereadable(theme_path)
-" 		execute 'source' fnameescape(theme_path)
-" 		" Persist theme
-" 		call writefile([g:colors_name], s:cache)
-" 	endif
-" endfunction
-
-" " THEME NAME
-" let g:theme_name = 'theme1'
-" autocmd MyAutoCmd ColorScheme * call s:theme_reload(g:theme_name)
-" 
-" " COLORSCHEME NAME
-" let s:cache = $VARPATH.'/theme.txt'
-" if ! exists('g:colors_name')
-" 	set background=dark
-" 	execute 'colorscheme'
-" 		\ filereadable(s:cache) ? readfile(s:cache)[0] : 'hybrid'
-" endif
-" 
-" colorscheme dual
-" vim: set ts=2 sw=2 tw=80 noet :
+" vim: set foldmethod=marker ts=2 :

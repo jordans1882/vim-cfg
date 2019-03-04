@@ -2,7 +2,6 @@
 " Plugin Settings
 "---------------------------------------------------------
 
-
 " {{{ ale
 if dein#tap('ale')
 	let g:ale_linters = {
@@ -195,6 +194,14 @@ if dein#tap('vim-easygit')
 	nnoremap <silent> <leader>gp :Gpush<CR>
 endif
 " }}} vim-easygit
+" {{{ vim-markdown-preview
+if dein#tap('vim-markdown-preview')
+
+let vim_markdown_preview_github=1
+let vim_markdown_preview_browser='chromium'
+
+endif
+" }}} vim-markdown-preview
 " {{{ vim-project
 if dein#tap('vim-project')
 	let g:project_use_nerdtree = 1
@@ -202,11 +209,14 @@ if dein#tap('vim-project')
 	set rtp+=~/.vim/bundle/vim-project/
 	call project#rc("~/Code")
 	Project  'scratch'
-	Project  '~/work/gleason/gleason-research' , 'gleason'
-	Project  '~/school/fall_2018/comptag/reconstruction' , 'reconstruction'
-	Project  '~/school/fall_2018/ustat_paper/ml_project' , 'ustat'
 	Project  '~/.config/nvim/' , 'vimrc'
-	Project  '~/.config/awesome' , 'awesomerc'
+	Project  '~/.xmonad/' , 'xmonad'
+	Project  '~/Dropbox/js_dissertation_research/' , 'dissertation'
+	Project  '~/work/gleason/gleason-research' , 'gleason'
+	Project  '~/school/spring_2019/csci_548/ruu_project/' , 'ruu_project'
+	Project  '~/school/spring_2019/csci_548/' , 'csci_548'
+	Project  '~/school/spring_2019/comp_geom' , 'comp_geom'
+	Project  '~/school/spring_2019/comptag/' , 'comptag'
 endif
 " }}} vim-project
 " {{{ vim-slime
@@ -215,6 +225,51 @@ if dein#tap('vim-slime')
 	let g:slime_python_ipython = 1
 endif
 " }}} vim-slime
+" {{{ vim-window
+if dein#tap('vim-window')
+	" Unimpaired mapping
+	nnoremap ]r :<C-U>call window#rotate(-1 * v:count1)<cr>
+	nnoremap [r :<C-U>call window#rotate(1 * v:count1)<cr>
+
+	" Improved window rotate to work with all layouts
+	nmap <C-w>r ]r
+	nmap <C-w><C-r> ]r
+
+	" Improve window exchange to work with all layouts
+	nnoremap <C-w>x :<C-U>call window#exchange(v:count)<cr>
+	nnoremap <C-w><c-x> :<C-U>call window#exchange(v:count)<cr>
+
+	" [g]lue windows together.
+	"    l = glue to right side
+	"    h = glue to left side
+	"    j = glue to bottom
+	"    k = glue to top
+	"
+	" `normal! 100zh` scrolls window contents into view since it gets messy when
+	" narrower window tries refocuses its cursor.
+	nnoremap <C-w>gl :<C-U>call window#join('rightbelow vsplit', v:count) <BAR>normal! 100zh<CR>
+	nnoremap <C-w>gh :<C-U>call window#join('leftabove vsplit', v:count)  <BAR>normal! 100zh<CR>
+	nnoremap <C-w>gj :<C-U>call window#join('belowright split', v:count)  <BAR>normal! 100zh<CR>
+	nnoremap <C-w>gk :<C-U>call window#join('aboveleft split', v:count)   <BAR>normal! 100zh<CR>
+
+	" Force a primary window layout.
+	" The capital HJKL forces the primary window to a specific direction.
+	command! -nargs=* LayoutH call window#layout('ball', 'H', <args>)
+	command! -nargs=* LayoutJ call window#layout('vertical ball', 'J', <args>)
+	command! -nargs=* LayoutK call window#layout('vertical ball', 'K', <args>)
+	command! -nargs=* LayoutL call window#layout('ball', 'L', <args>)
+
+	" Map the layout commands to something if that's your style.
+	nnoremap <C-w>gH :<C-U>LayoutH v:count<CR>
+	nnoremap <C-w>gJ :<C-U>LayoutJ v:count<CR>
+	nnoremap <C-w>gK :<C-U>LayoutK v:count<CR>
+	nnoremap <C-w>gL :<C-U>LayoutL v:count<CR>
+
+	" Improve window only, to split to new tab instead
+	nnoremap <C-w>o :call window#only()<cr>
+	nnoremap <C-w><c-o> :call window#only()<cr>
+endif
+" }}} vim-window
 " {{{ which-key
 if dein#tap('vim-which-key')
 	let g:which_key_map = {}
@@ -234,10 +289,10 @@ if dein#tap('vim-which-key')
 				\ 'h' : ['Startify'  , 'home-buffer']     ,
 				\ 'l' : ['blast'     , 'last-buffer']     ,
 				\ 'n' : ['bnext'     , 'next-buffer']     ,
-				\ 'p' : ['bprevious' , 'previous-buffer'] ,
+				\ 'b' : ['bprevious' , 'back-a-buffer'] ,
 				\ 's' : ['w' , 'Write Buffer'] ,
 				\ 'S' : ['w!' , 'Force Write Buffer'] ,
-				\ 'w' : ['Welcome'  , 'welcome-buffer']     ,
+				\ 'p' : ['Welcome'  , 'Project-buffer']     ,
 				\ }
 	let g:which_key_map['c'] = {
 			\ 'name' : '+compile' ,

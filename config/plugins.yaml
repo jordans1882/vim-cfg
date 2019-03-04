@@ -56,6 +56,8 @@
 - repo: scrooloose/nerdtree
 - repo: bronson/vim-visual-star-search
 - repo: itchyny/calendar.vim
+- repo: JamshedVesuna/vim-markdown-preview
+- repo: ddrscott/vim-window
 
 
 # Startup }}}
@@ -193,9 +195,7 @@
 
 #- { repo: python-mode/python-mode, build: 'git submodule update --init --recursive' }
 # # }}} Languages
-# #  {{{ vim modeline
-# #  vim: set foldmethod=marker ts=2 sw=2 tw=80 et :
-# #  }}} vim modeline
 
-
-# vim: set foldmethod=marker :
+#  {{{ vim modeline
+#  vim: set foldmethod=marker ts=2 sw=2 tw=80 et :
+#  }}} vim modeline

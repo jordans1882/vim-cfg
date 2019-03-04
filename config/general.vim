@@ -17,7 +17,7 @@ filetype plugin on
 " }}} General Defaults
 
 
-" Olde General Settings
+" Ye Olde General Settings
 "---------------------------------------------------------
 " " General {{{
 " set mouse=nv                 " Disable mouse in command-line mode

@@ -58,6 +58,7 @@ xmap <BS> %
 nmap <Tab>  <C-w>w
 nmap <S-Tab>  <C-w>W
 
+" Change directory to current folder
 nnoremap cf    :cd %:p:h <CR>
 
 
@@ -65,11 +66,13 @@ nnoremap cf    :cd %:p:h <CR>
 " Editor UI {{{
 " ---------
 
-" I like to :quit with 'q', shrug.
+" :quit with 'q'
 nnoremap <silent> q :<C-u>:quit<CR>
+
+" TODO: Write what this does
 " autocmd MyAutoCmd FileType man nnoremap <silent><buffer> q :<C-u>:quit<CR>
 
-" Macros
+" Define macro with 'Q'
 nnoremap Q q
 nnoremap gQ @q
 

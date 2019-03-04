@@ -5,7 +5,15 @@
 
 " {{{ Load non-vanilla config
 if !exists("g:Vanilla")
-	execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/vimrc'
+
+	if exists("g:Alternative")
+		execute 'source' fnamemodify(expand('<sfile>'), ':h').'/alt_config/vimrc'
+	endif
+
+	if exists("g:Standard")
+		execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/vimrc'
+  endif
+
 endif
 " }}} Load non-vanilla config
 

@@ -9,6 +9,7 @@ if dein#tap('ale')
 				\   'cpp': ['gcc'],
 				\   'html': ['tidy'],
 				\   'lua': ['luacheck'],
+				\   'R': ['lintr'],
 				\   'r': ['lintr'],
 				\   'rmd': ['lintr'],
 				\   'rnoweb': ['lintr'],
@@ -28,7 +29,7 @@ if dein#tap('ale')
 endif
 " }}} ale
 " {{{ Calendar
-if dein#tap('calendar')
+if dein#tap('calendar.vim')
 	let g:calendar_google_calendar = 1
 	let g:calendar_google_task = 1
 endif
@@ -86,6 +87,68 @@ if dein#tap('deoplete.nvim')
 	let g:deoplete#enable_at_startup = 1
 endif
 " }}} deoplete
+" {{{ neocomplete
+if dein#tap('neocompete')
+	" R (plugin: vim-R-plugin)
+	let g:neocomplete#fallback_mappings = ["\<C-x>\<C-o>", "\<C-x>\<C-n>"]
+	  let g:neocomplete#data_directory = '~/.vim/tmp/neocomplete'
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_auto_select = 1
+    let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#auto_completion_start_length = 2
+
+    " increase limit for tag cache files
+    let g:neocomplete#sources#tags#cache_limit_size = 16777216 " 16MB
+
+    " fuzzy completion breaks dot-repeat more noticeably
+    " https://github.com/Shougo/neocomplete.vim/issues/332
+    let g:neocomplete#enable_fuzzy_completion = 0
+
+    " always use completions from all buffers
+    if !exists('g:neocomplete#same_filetypes')
+      let g:neocomplete#same_filetypes = {}
+    endif
+    let g:neocomplete#same_filetypes._ = '_'
+
+    " enable omni-completion for Ruby and PHP
+    call neocomplete#util#set_default_dictionary(
+          \'g:neocomplete#sources#omni#input_patterns', 'ruby',
+          \'[^. *\t]\.\h\w*\|\h\w*::\w*')
+    call neocomplete#util#set_default_dictionary(
+          \'g:neocomplete#sources#omni#input_patterns',
+          \'php',
+          \'[^. \t]->\h\w*\|\h\w*::\w*')
+
+    "call neocomplete#util#set_default_dictionary(
+					"\ 'g:neocomplete#sources#omni#input_patterns',
+					"\'r',
+					"\ '[[:alnum:].\\]\+')
+
+    " disable for Python
+    call neocomplete#util#set_default_dictionary(
+          \'g:neocomplete#sources#omni#input_patterns',
+          \'python',
+          \'')
+
+    " from neocomplete.txt:
+    " ---------------------
+
+    " Plugin key-mappings.
+    inoremap <expr> <C-g> neocomplete#undo_completion()
+    inoremap <expr> <C-l> neocomplete#complete_common_string()
+
+    " Recommended key-mappings.
+    " <CR>: cancel popup and insert newline.
+    inoremap <silent> <CR> <C-r>=neocomplete#smart_close_popup()<CR><CR>
+    " <TAB>: completion.
+    inoremap <expr> <Tab> pumvisible() ? "\<C-y>" : "\<Tab>"
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <expr> <C-h> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr> <BS>  neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr> <C-y> neocomplete#close_popup()
+    inoremap <expr> <C-e> neocomplete#cancel_popup()
+endif
+" }}} neocomplete
 " {{{ neosnippet
 if dein#tap('neosnippet')
 	" Plugin key-mappings.
@@ -134,8 +197,9 @@ endif
 " {{{ nvim-r
 if dein#tap('nvim-r')
 	let R_in_buffer = 0
-	let R_term="alacritty"
+	let R_term="urxvt"
 	let R_assign = 2
+	inoremap <Nul> <C-x><C-o>
 endif
 " }}} nvim-r
 "  python-mode {{{
@@ -147,6 +211,7 @@ endif
 " NERDTree }}}
 "  SuperTab {{{
 if dein#tap('supertab')
+	let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 	let g:SuperTabMappingForward = '<s-tab>' " (default value: '<tab>')
 	let g:SuperTabMappingBackward = '<tab>' " (default value: '<s-tab>')
 endif
@@ -207,16 +272,21 @@ if dein#tap('vim-project')
 	let g:project_use_nerdtree = 1
 	let g:project_enable_welcome = 0
 	set rtp+=~/.vim/bundle/vim-project/
-	call project#rc("~/Code")
-	Project  'scratch'
-	Project  '~/.config/nvim/' , 'vimrc'
-	Project  '~/.xmonad/' , 'xmonad'
-	Project  '~/Dropbox/js_dissertation_research/' , 'dissertation'
+	call project#rc("")
+	Project  '~/school/spring_2019/phd_comps' , 'phd_comps'
 	Project  '~/work/gleason/gleason-research' , 'gleason'
+	Project  '~/git_repos/qubbd' , 'qubbd'
+	Project  '~/Dropbox/js_dissertation_research/' , 'dissertation'
 	Project  '~/school/spring_2019/csci_548/ruu_project/' , 'ruu_project'
 	Project  '~/school/spring_2019/csci_548/' , 'csci_548'
 	Project  '~/school/spring_2019/comp_geom' , 'comp_geom'
 	Project  '~/school/spring_2019/comptag/' , 'comptag'
+	Project  '~/.config/awesome/' , 'awesomerc'
+	Project  '~/.xmonad/' , 'xmonadrc'
+	Project  '~/.config/nvim/' , 'vimrc'
+	File     '~/.tmux.conf' , 'tmuxrc'
+	File     '~/.zshrc', 'zshrc'
+
 endif
 " }}} vim-project
 " {{{ vim-slime

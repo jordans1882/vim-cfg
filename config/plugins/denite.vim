@@ -106,7 +106,7 @@ let s:menus.zsh = {
 	\ 'description': 'Edit your import zsh configuration'
 	\ }
 let s:menus.zsh.file_candidates = [
-	\ ['zshrc', '~/.config/zsh/.zshrc'],
+	\ ['zshrc', '~/.zshrc'],
 	\ ['zshenv', '~/.zshenv'],
 	\ ]
 

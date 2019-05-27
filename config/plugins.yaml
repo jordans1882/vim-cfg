@@ -4,10 +4,11 @@
 # Startup {{{
 # -------
 #
+- repo: tpope/vim-fugitive
 - repo: terryma/vim-multiple-cursors
 - repo: easymotion/vim-easymotion
-#- repo: autozimu/LanguageClient-neovim # Does some things I don't like in latex
-- repo: ervandew/supertab # Use tab to autocomplete
+##- repo: autozimu/LanguageClient-neovim # Does some things I don't like in latex
+#- repo: ervandew/supertab # Use tab to autocomplete
 - repo: ludovicchabant/vim-gutentags
 - repo: majutsushi/tagbar
 - repo: amiorin/vim-project
@@ -20,7 +21,7 @@
 - repo: junegunn/vim-slash
 - repo: Shougo/dein.vim
 - repo: Shougo/deol.nvim
-# - repo: Shougo/context_filetype.vim
+- repo: Shougo/context_filetype.vim
 #   #- repo: Shougo/unite.vim
 #   #- repo: Shougo/vimfiler.vim
 - repo: roxma/vim-hug-neovim-rpc
@@ -56,7 +57,7 @@
 - repo: scrooloose/nerdtree
 - repo: bronson/vim-visual-star-search
 - repo: itchyny/calendar.vim
-- repo: JamshedVesuna/vim-markdown-preview
+## - repo: JamshedVesuna/vim-markdown-preview
 - repo: ddrscott/vim-window
 
 
@@ -66,7 +67,8 @@
 
 # Languages
 # ---------
-- { repo: jalvesaq/nvim-r, on_ft: r }
+- { repo: jalvesaq/nvim-r }
+#- { repo: jalvesaq/nvim-r, on_ft: Rmd }
 
 # # ==========================================
 # # Commands
@@ -99,17 +101,19 @@
 # # Interface }}}
 # # Completion {{{
 # # ----------
-# #- { repo: Valloric/YouCompleteMe, build: './install.py --all' }
+- { repo: Valloric/YouCompleteMe, build: './install.py --all' }
 # - { repo: Shougo/deoplete.nvim}
 #
 #
-- repo: Shougo/deoplete.nvim
-  depends: context_filetype.vim
-  if: has('nvim') && empty($VIM_MINIMAL)
-  on_event: InsertEnter
-  hook_source: |
-    source $VIMPATH/config/plugins/deoplete.vim
-    call deoplete#enable()
+#
+- repo: tenfyzhong/CompleteParameter.vim
+#- repo: Shougo/deoplete.nvim
+  #depends: context_filetype.vim
+  #if: has('nvim') && empty($VIM_MINIMAL)
+  #on_event: InsertEnter
+  #hook_source: |
+    #source $VIMPATH/config/plugins/deoplete.vim
+    #call deoplete#enable()
 #
 #- repo: Shougo/neocomplete
 #  depends: context_filetype.vim
@@ -121,20 +125,20 @@
 #  hook_source: source $VIMPATH/config/plugins/neocomplete.vim
 #
 # - repo: garbas/vim-snipmate
-- repo: Shougo/neosnippet-snippets
-  build: 'cp ~/.cache/vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets/* ~/.cache/vim/snippets/'
-- repo: Shougo/neosnippet.vim
-  depends: [ neosnippet-snippets, context_filetype.vim ]
-  if: empty($VIM_MINIMAL)
-  on_event: InsertCharPre
-  on_ft: snippet
-  hook_add: let g:neosnippet#data_directory = $VARPATH.'/snippets'
-  hook_source: |
-    let g:neosnippet#enable_snipmate_compatibility = 1
-    let g:neosnippet#enable_completed_snippet = 1
-    let g:neosnippet#expand_word_boundary = 1
-    autocmd MyAutoCmd CompleteDone * call neosnippet#complete_done()
-    autocmd MyAutoCmd InsertLeave * NeoSnippetClearMarkers
+#- repo: Shougo/neosnippet-snippets
+#  build: 'cp ~/.cache/vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets/* ~/.cache/vim/snippets/'
+# - repo: Shougo/neosnippet.vim
+#   depends: [ neosnippet-snippets, context_filetype.vim ]
+#   if: empty($VIM_MINIMAL)
+#   on_event: InsertCharPre
+#   on_ft: snippet
+#   hook_add: let g:neosnippet#data_directory = $VARPATH.'/snippets'
+#   hook_source: |
+#     let g:neosnippet#enable_snipmate_compatibility = 1
+#     let g:neosnippet#enable_completed_snippet = 1
+#     let g:neosnippet#expand_word_boundary = 1
+#     autocmd MyAutoCmd CompleteDone * call neosnippet#complete_done()
+#     autocmd MyAutoCmd InsertLeave * NeoSnippetClearMarkers
 #
 # - repo: ludovicchabant/vim-gutentags
 #   if: executable('ctags') && empty($VIM_MINIMAL)
@@ -160,7 +164,7 @@
 # # ------
 - repo: Shougo/denite.nvim
 # - { repo: chemzqm/unite-location, on_source: denite.nvim }
-# - { repo: chemzqm/denite-git, on_source: denite.nvim }
+- { repo: chemzqm/denite-git, on_source: denite.nvim }
 # - { repo: rafi/vim-denite-z, on_source: denite.nvim }
 # - { repo: rafi/vim-denite-session, on_source: denite.nvim }
 #
@@ -188,7 +192,7 @@
 
 # # Text objects }}}
 # # {{{ Languages
-- { repo: Shougo/deoplete.nvim, 'do': ':UpdateRemotePlugins' }
+#- { repo: Shougo/deoplete.nvim, 'do': ':UpdateRemotePlugins' }
 # - repo: zchee/deoplete-jedi
 #   build': 'git submodule update --init'
 #
